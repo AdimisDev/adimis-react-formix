@@ -45,7 +45,6 @@ const App = () => {
         type: "text",
         placeholder: "Your username",
         defaultValue: "",
-        colSpan: 1,
         validations: z
           .string()
           .min(1, "Username is required")
@@ -80,7 +79,6 @@ const App = () => {
         type: "email",
         placeholder: "Your email",
         defaultValue: "",
-        colSpan: 1,
         validations: z
           .string()
           .email("Enter a valid email address")
@@ -115,7 +113,6 @@ const App = () => {
         type: "text",
         placeholder: "Your address",
         defaultValue: "",
-        colSpan: 1,
         validations: z
           .string()
           .min(10, "Address should be at least 10 characters"),
@@ -149,7 +146,6 @@ const App = () => {
         type: "tel",
         placeholder: "+1234567890",
         defaultValue: "",
-        colSpan: 1,
         validations: z
           .string()
           .regex(/^\+?(\d.*){10,}$/, "Enter a valid phone number"),
@@ -182,7 +178,6 @@ const App = () => {
         autoComplete: "new-password",
         type: "password",
         placeholder: "Your password",
-        colSpan: 1,
         defaultValue: "",
         validations: z
           .string()

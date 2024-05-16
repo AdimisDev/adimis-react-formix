@@ -10,6 +10,7 @@ import {
   SubmitErrorHandler,
   CriteriaMode,
   DeepPartialSkipArrayKey,
+  FieldError,
 } from "react-hook-form";
 import { z, ZodTypeAny } from "zod";
 
@@ -42,8 +43,6 @@ export interface IFieldSchema<TFieldValues extends FieldValues> {
   fieldStyle?: React.CSSProperties;
   /** CSS class name for the field. */
   fieldClassName?: string;
-  /** Column span for the field in a grid layout. */
-  colSpan?: number;
   /** The type of the field (e.g., text, select, radio group). */
   type?:
     | React.HTMLInputTypeAttribute
@@ -259,28 +258,84 @@ export interface UseSchemaFormReturn<TFieldValues extends FieldValues> {
   renderForm: (data: RenderFormProps<TFieldValues>) => JSX.Element;
 }
 
+/**
+ * Interface for flexible field properties in a form layout.
+ */
 export interface FormFlexFieldProps {
+  /** Determines if the layout is fluid/responsive. */
   fluid?: boolean;
+  /** Custom CSS styles for the flexible field container. */
   style?: React.CSSProperties;
+  /** Custom CSS class name for the flexible field container. */
   className?: string;
+  /** Number of columns in the grid layout. */
   columns?: number;
+  /** Gap between the fields in the layout. */
   gap?: string;
 }
 
+/**
+ * Type for the context value of an individual form field.
+ * @template TFieldValues - The type of field values.
+ * @template TName - The name of the field.
+ */
 export type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
+  /** The name of the field. */
   name: TName;
 };
 
+/**
+ * Interface for the properties of the main body of the form.
+ */
 export interface FormBodyProps {
+  /** Determines if the form should be wrapped in a panel (default is true). */
   panel?: boolean;
+  /** HTML attributes for the form container element. */
   containerProps?: React.HTMLAttributes<HTMLDivElement>;
+  /** HTML attributes for the form element. */
   formProps?: React.HTMLAttributes<HTMLFormElement>;
+  /** The content to be rendered within the form body. */
   children: React.ReactNode;
 }
 
+/**
+ * Type for the context value of an individual field item.
+ */
 export type FieldItemContextValue = {
+  /** The unique identifier for the field item. */
   id: string;
 };
+
+/**
+ * Interface for the return value of the useFormField hook.
+ * @template TFieldValues - The type of the field values.
+ * @template TName - The name of the field.
+ */
+export interface UseFormFieldReturn<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> {
+  /** The unique identifier for the field item. */
+  id: string;
+  /** The name of the field. */
+  name: TName;
+  /** The ID for the form item element. */
+  fieldItemId: string;
+  /** The ID for the form item description element. */
+  fieldDescriptionId: string;
+  /** The ID for the form item message element. */
+  fieldMessageId: string;
+  /** The error state of the field, if any. */
+  error?: FieldError;
+  /** Indicates if the field has been touched. */
+  isTouched: boolean;
+  /** Indicates if the field value has been modified. */
+  isDirty: boolean;
+  /** Indicates if the field is valid. */
+  invalid: boolean;
+  /** Indicated if the field is being validated*/
+  isValidating: boolean;
+}
