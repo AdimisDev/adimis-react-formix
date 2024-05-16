@@ -258,13 +258,20 @@ const useSchemaForm = <TFieldValues extends FieldValues>(
             }
             className={field.fieldClassName}
           >
-            {field.render({
-              formMethods,
-              formItem: field,
-              formErrors: formMethods.formState.errors,
-              formDisabled: formDisabled ? true : false,
-              submitButtonLoading: submitButtonLoading,
-            })}
+            {field.render ? (
+              field.render({
+                formMethods,
+                formItem: field,
+                formErrors: formMethods.formState.errors,
+                formDisabled: formDisabled ? true : false,
+                submitButtonLoading: submitButtonLoading,
+              })
+            ) : (
+              <input
+                placeholder={field.placeholder}
+                {...formMethods.register(field.key)}
+              />
+            )}
           </div>
         );
       }

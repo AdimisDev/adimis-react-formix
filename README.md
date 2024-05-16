@@ -16,6 +16,8 @@ Welcome to `@adimis/react-formix`, a versatile and powerful React library for cr
 - **Dynamic field visibility:** Update field visibility dynamically based on user inputs.
 - **Validation removal conditions:** Remove field validations dynamically based on certain conditions.
 - **Developer tools support:** Enable developer tools for debugging and inspecting form state during development.
+- **Customizable Theme:** Customize form themes to match your application's design.
+- **Latest React and NextJs Support:** Built to support the latest versions of React and Next.js for modern web development.
 
 ## Installation
 
@@ -40,8 +42,6 @@ Here's an example of how to use `@adimis/react-formix` to create a basic signup 
 
 import React from "react";
 import { z } from "zod";
-import { Input } from "./components/ui/input";
-import { Button } from "./components/ui/button";
 import {
   FormBody,
   FormContent,
@@ -52,7 +52,10 @@ import {
   FormHeader,
   FormTitle,
   ISchemaFormProps,
+  ThemeProvider,
+  ThemeColors,
 } from "@adimis/react-formix";
+import "@adimis/react-formix/dist/style.css";
 
 interface SignUp {
   username: string;
@@ -60,9 +63,15 @@ interface SignUp {
   address: string;
   phone: string;
   password: string;
+  gender: string;
+  terms: boolean;
+  file: File;
+  date: Date;
+  year: number;
+  expertise: string[];
 }
 
-const App = () => {
+const Form = () => {
   const schemaFormProps: ISchemaFormProps<SignUp> = {
     formLabel: "Example Barebone Form",
     formSlug: "example-barebone-form",
@@ -79,32 +88,10 @@ const App = () => {
         type: "text",
         placeholder: "Your username",
         defaultValue: "",
-        colSpan: 1,
         validations: z
           .string()
           .min(1, "Username is required")
           .max(20, "Username must not exceed 20 characters"),
-        render: ({
-          formDisabled,
-          formItem,
-          formMethods,
-          submitButtonLoading,
-        }) => (
-          <Input
-            type={formItem.type}
-            id={formItem.key}
-            disabled={formDisabled || submitButtonLoading}
-            style={{
-              width: "100%",
-              height: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              padding: "10px",
-              margin: "5px 0",
-            }}
-            {...formMethods.register(formItem.key)}
-          />
-        ),
       },
       {
         key: "email",
@@ -114,32 +101,10 @@ const App = () => {
         type: "email",
         placeholder: "Your email",
         defaultValue: "",
-        colSpan: 1,
         validations: z
           .string()
           .email("Enter a valid email address")
           .min(1, "Email is required"),
-        render: ({
-          formDisabled,
-          formItem,
-          formMethods,
-          submitButtonLoading,
-        }) => (
-          <Input
-            type={formItem.type}
-            id={formItem.key}
-            disabled={formDisabled || submitButtonLoading}
-            style={{
-              width: "100%",
-              height: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              padding: "10px",
-              margin: "5px 0",
-            }}
-            {...formMethods.register(formItem.key)}
-          />
-        ),
       },
       {
         key: "address",
@@ -149,31 +114,9 @@ const App = () => {
         type: "text",
         placeholder: "Your address",
         defaultValue: "",
-        colSpan: 1,
         validations: z
           .string()
           .min(10, "Address should be at least 10 characters"),
-        render: ({
-          formDisabled,
-          formItem,
-          formMethods,
-          submitButtonLoading,
-        }) => (
-          <Input
-            type={formItem.type}
-            id={formItem.key}
-            disabled={formDisabled || submitButtonLoading}
-            style={{
-              width: "100%",
-              height: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              padding: "10px",
-              margin: "5px 0",
-            }}
-            {...formMethods.register(formItem.key)}
-          />
-        ),
       },
       {
         key: "phone",
@@ -183,31 +126,9 @@ const App = () => {
         type: "tel",
         placeholder: "+1234567890",
         defaultValue: "",
-        colSpan: 1,
         validations: z
           .string()
           .regex(/^\+?(\d.*){10,}$/, "Enter a valid phone number"),
-        render: ({
-          formDisabled,
-          formItem,
-          formMethods,
-          submitButtonLoading,
-        }) => (
-          <Input
-            type={formItem.type}
-            id={formItem.key}
-            disabled={formDisabled || submitButtonLoading}
-            style={{
-              width: "100%",
-              height: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              padding: "10px",
-              margin: "5px 0",
-            }}
-            {...formMethods.register(formItem.key)}
-          />
-        ),
       },
       {
         key: "password",
@@ -216,7 +137,6 @@ const App = () => {
         autoComplete: "new-password",
         type: "password",
         placeholder: "Your password",
-        colSpan: 1,
         defaultValue: "",
         validations: z
           .string()
@@ -236,27 +156,6 @@ const App = () => {
             operator: "!==",
           },
         ],
-        render: ({
-          formDisabled,
-          formItem,
-          formMethods,
-          submitButtonLoading,
-        }) => (
-          <Input
-            type={formItem.type}
-            id={formItem.key}
-            disabled={formDisabled || submitButtonLoading}
-            style={{
-              width: "100%",
-              height: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              padding: "10px",
-              margin: "5px 0",
-            }}
-            {...formMethods.register(formItem.key)}
-          />
-        ),
       },
     ],
     defaultValues: {
@@ -275,27 +174,87 @@ const App = () => {
       ),
   };
 
+  const themeColors: ThemeColors = {
+    root: {
+      background: "#ffffff",
+      foreground: "#1e1e1e",
+      card: "#ffffff",
+      "card-foreground": "#1e1e1e",
+      popover: "#ffffff",
+      "popover-foreground": "#1e1e1e",
+      primary: "#3b82f6",
+      "primary-foreground": "#d9eefe",
+      secondary: "#f3f4f6",
+      "secondary-foreground": "#2e2e2e",
+      muted: "#f3f4f6",
+      "muted-foreground": "#68737d",
+      accent: "#f3f4f6",
+      "accent-foreground": "#2e2e2e",
+      destructive: "#ff6b6b",
+      "destructive-foreground": "#d9eefe",
+      border: "#d1d5db",
+      input: "#d1d5db",
+      ring: "#3b82f6",
+      radius: "1rem",
+    },
+    dark: {
+      background: "#1e1e1e",
+      foreground: "#d9eefe",
+      card: "#1e1e1e",
+      "card-foreground": "#d9eefe",
+      popover: "#1e1e1e",
+      "popover-foreground": "#d9eefe",
+      primary: "#4f46e5",
+      "primary-foreground": "#2e2e2e",
+      secondary: "#1f2937",
+      "secondary-foreground": "#d9eefe",
+      muted: "#1f2937",
+      "muted-foreground": "#a0aec0",
+      accent: "#1f2937",
+      "accent-foreground": "#d9eefe",
+      destructive: "#b91c1c",
+      "destructive-foreground": "#d9eefe",
+      border: "#1f2937",
+      input: "#1f2937",
+      ring: "#609ff2",
+    },
+  };
+
   return (
-    <FormContext {...schemaFormProps}>
-      <FormBody>
-        <FormHeader>
-          <FormTitle />
-          <FormDescription />
-        </FormHeader>
-        <FormContent>
-          <FormFlexFields fluid />
-        </FormContent>
-        <FormFooter>
-          <Button type="submit" className="mt-5">
-            Submit
-          </Button>
-        </FormFooter>
-      </FormBody>
-    </FormContext>
+    <ThemeProvider defaultTheme="dark" themeColors={themeColors}>
+      <FormContext {...schemaFormProps}>
+        <FormBody>
+          <FormHeader>
+            <FormTitle />
+            <FormDescription />
+          </FormHeader>
+          <FormContent>
+            <FormFlexFields fluid />
+          </FormContent>
+          <FormFooter>
+            <button
+              type="submit"
+              style={{
+                backgroundColor: "#111111",
+                color: "#f1f1f1",
+                padding: "0.5rem 1rem",
+                borderRadius: "0.5rem",
+                border: "none",
+                outline: "none",
+                cursor: "pointer",
+                fontSize: "1rem",
+              }}
+            >
+              Submit
+            </button>
+          </FormFooter>
+        </FormBody>
+      </FormContext>
+    </ThemeProvider>
   );
 };
 
-export default App;
+export default Form;
 ```
 
 ## Exports
@@ -367,413 +326,6 @@ A hook for accessing the form field context and state. It provides field-level i
 ### `useSchemaFormContext`
 
 A hook for accessing the schema form context. It provides access to the form's state and methods, enabling interaction with the form at a higher level.
-
-## Type Interface
-
-```typescript
-import React, { HTMLAttributes, HTMLInputAutoCompleteAttribute } from "react";
-import {
-  FieldErrors,
-  FieldValues,
-  FieldPath,
-  Path,
-  DefaultValues,
-  UseFormReturn,
-  SubmitErrorHandler,
-  CriteriaMode,
-  DeepPartialSkipArrayKey,
-  FieldError,
-} from "react-hook-form";
-import { z, ZodTypeAny } from "zod";
-
-export type ZodSchemaObject<T> = Record<keyof T, ZodTypeAny>;
-
-/**
- * Interface representing the schema for a form field.
- * @template TFieldValues - The type of field values.
- */
-export interface IFieldSchema<TFieldValues extends FieldValues> {
-  /** The key or path for the field within the form values. */
-  key: Path<TFieldValues>;
-  /** The label for the field, displayed in the form UI. */
-  label?: string;
-  /** A brief description of the field's purpose. */
-  description?: string;
-  /** Help text providing additional information about the field. */
-  helpText?: string;
-  /** AutoComplete attribute for the field. */
-  autoComplete?: HTMLInputAutoCompleteAttribute;
-  /** Placeholder text for the field. */
-  placeholder?: string;
-  /** Default value for the field. */
-  defaultValue?: TFieldValues[Path<TFieldValues>];
-  /** Whether the field is disabled. */
-  disabled?: boolean;
-  /** Validation schema for the field using Zod. */
-  validations?: z.ZodType<TFieldValues[Path<TFieldValues>], any>;
-  /** CSS styles for the field. */
-  fieldStyle?: React.CSSProperties;
-  /** CSS class name for the field. */
-  fieldClassName?: string;
-  /** The type of the field (e.g., text, select, radio group). */
-  type?:
-    | React.HTMLInputTypeAttribute
-    | "textarea"
-    | "select"
-    | "multi-select"
-    | "radio group"
-    | "boolean";
-  /** Options for select, multi-select, or radio group fields. */
-  options?: Array<{ label: string; value: string }>;
-  /** Conditions for displaying the field based on other field values. */
-  displayConditions?: DisplayCondition<TFieldValues>[];
-  /** Conditions for removing validation from the field based on other field values. */
-  removeValidationConditions?: ValidationCondition<TFieldValues>[];
-  /** Custom render function for the field. */
-  render: FieldRenderFunction<TFieldValues>;
-}
-
-/**
- * Interface representing the properties of the form schema.
- * @template TFieldValues - The type of field values.
- */
-export interface ISchemaFormProps<TFieldValues extends FieldValues> {
-  /** The unique identifier for the form. */
-  formSlug: string;
-  /** The label or title of the form. */
-  formLabel: string;
-  /** A brief description of the form. */
-  formDescription?: string;
-  /** The schema defining the fields in the form. */
-  schema: IFieldSchema<TFieldValues>[];
-  /** Whether to enable developer tools for form debugging. */
-  devTools?: boolean;
-  /** Whether to show validation errors. */
-  showValidationErrors?: boolean;
-  /** Criteria mode for validation. */
-  criteriaMode?: CriteriaMode;
-  /** CSS styles for the form. */
-  formStyle?: React.CSSProperties;
-  /** CSS class name for the form. */
-  formClassName?: string;
-  /** Whether the form is disabled. */
-  formDisabled?: boolean;
-  /** Whether to enable conditional rendering of fields. */
-  enableConditionalRendering?: boolean;
-  /** Whether to enable validations. */
-  enableValidations?: boolean;
-  /** Validation mode (when validations are triggered). */
-  validationMode?: ValidationMode;
-  /** Re-validation mode (when re-validations are triggered). */
-  reValidateMode?: ReValidateMode;
-  /** Default values for the form fields. */
-  defaultValues?:
-    | DefaultValues<TFieldValues>
-    | AsyncDefaultValues<TFieldValues>;
-  /** Where to persist form responses (e.g., localStorage, sessionStorage). */
-  persistFormResponse?: "localStorage" | "sessionStorage";
-  /** Callback for form submission. Supports both normal and async functions. */
-  onSubmit?: FormSubmitHandler<TFieldValues>;
-  /** Callback for handling invalid form submissions. Supports both normal and async functions. */
-  onInvalidSubmit?: SubmitErrorHandler<TFieldValues>;
-  /** Callback for handling form changes. */
-  onChange?: FormChangeHandler<TFieldValues>;
-}
-
-/**
- * Interface representing the context of a form.
- * @template TFieldValues - The type of field values.
- */
-export interface FormContextType<TFieldValues extends FieldValues> {
-  /** The label or title of the form. */
-  formLabel: string;
-  /** The unique identifier for the form. */
-  formSlug: string;
-  /** The key used for the form. */
-  formKey: string;
-  /** A brief description of the form. */
-  formDescription?: string;
-  /** The fields schema in the form. */
-  formFields: IFieldSchema<TFieldValues>[];
-  /** Methods from react-hook-form for managing the form state. */
-  formMethods: UseFormReturn<TFieldValues>;
-  /** The set of visible fields in the form. */
-  visibleFields: Set<Path<TFieldValues>>;
-  /** Whether the form is disabled. */
-  formDisabled: boolean;
-  /** Whether the submit button is loading. */
-  submitButtonLoading: boolean;
-  /** Handler for form submission. */
-  handleOnSubmit: FormSubmitHandler<TFieldValues>;
-  /** Handler for invalid form submission. */
-  handleOnInvalidSubmit: SubmitErrorHandler<TFieldValues>;
-  /** Function to render fields in a flexible layout. */
-  renderFlexFields: (props: RenderFlexFieldsProps) => JSX.Element;
-  /** Function to render the entire form. */
-  renderForm: (data: RenderFormProps<TFieldValues>) => JSX.Element;
-}
-
-/**
- * Interface representing the properties for rendering the form.
- * @template TFieldValues - The type of field values.
- */
-export interface RenderFormProps<TFieldValues extends FieldValues> {
-  /** Whether the form should be fluid (responsive). */
-  fluid?: boolean;
-  /** CSS styles for the form container. */
-  style?: React.CSSProperties;
-  /** Number of columns in the form layout. */
-  columns?: number;
-  /** Gap between form fields. */
-  gap?: string;
-  /** Custom header for the form. */
-  header?: React.ReactNode;
-  /** Custom footer for the form. */
-  footer?: React.ReactNode;
-  /** CSS styles for the submit button. */
-  submitButtonStyle?: React.CSSProperties;
-  /** Text for the submit button. */
-  submitButtonText?: React.ReactNode;
-  /** Loader for the submit button when loading. */
-  submitButtonLoader?: React.ReactNode;
-  /** Function to render form fields. */
-  renderFields?: RenderFieldsFunction<TFieldValues>;
-}
-
-/**
- * Interface representing the properties for rendering flexible fields.
- */
-export interface RenderFlexFieldsProps extends HTMLAttributes<HTMLDivElement> {
-  /** Whether the layout is fluid (responsive). */
-  fluid: boolean;
-  /** Number of columns in the layout. */
-  columns: number;
-  /** Gap between fields in the layout. */
-  gap: string;
-}
-
-/**
- * Interface representing the return value of the useSchemaForm hook.
- * @template TFieldValues - The type of field values.
- */
-export interface UseSchemaFormReturn<TFieldValues extends FieldValues> {
-  /** The label or title of the form. */
-  formLabel: string;
-  /** The unique identifier for the form. */
-  formSlug: string;
-  /** The key used for the form. */
-  formKey: string;
-  /** A brief description of the form. */
-  formDescription?: string;
-  /** The fields schema in the form. */
-  formFields: IFieldSchema<TFieldValues>[];
-  /** Methods from react-hook-form for managing the form state. */
-  formMethods: UseFormReturn<TFieldValues>;
-  /** The set of visible fields in the form. */
-  visibleFields: Set<Path<TFieldValues>>;
-  /** Whether the submit button is loading. */
-  submitButtonLoading: boolean;
-  /** Whether the form is disabled. */
-  formDisabled: boolean;
-  /** Handler for form submission. */
-  handleOnSubmit: FormSubmitHandler<TFieldValues>;
-  /** Handler for invalid form submission. */
-  handleOnInvalidSubmit: SubmitErrorHandler<TFieldValues>;
-  /** Function to render fields in a flexible layout. */
-  renderFlexFields: (props: RenderFlexFieldsProps) => JSX.Element;
-  /** Function to render the entire form. */
-  renderForm: (data: RenderFormProps<TFieldValues>) => JSX.Element;
-}
-
-/**
- * Interface representing the properties for flexible fields in a form layout.
- */
-export interface FormFlexFieldProps {
-  /** Determines if the layout is fluid or responsive. */
-  fluid?: boolean;
-  /** Custom CSS styles for the flexible field container. */
-  style?: React.CSSProperties;
-  /** Custom CSS class name for the flexible field container. */
-  className?: string;
-  /** Number of columns in the grid layout. */
-  columns?: number;
-  /** Gap between the fields in the layout. */
-  gap?: string;
-}
-
-/**
- * Interface representing the properties of the form body.
- */
-export interface FormBodyProps {
-  /** Determines if the form should be wrapped in a panel (default is true). */
-  panel?: boolean;
-  /** HTML attributes for the form container element. */
-  containerProps?: React.HTMLAttributes<HTMLDivElement>;
-  /** HTML attributes for the form element. */
-  formProps?: React.HTMLAttributes<HTMLFormElement>;
-  /** The content to be rendered within the form body. */
-  children: React.ReactNode;
-}
-
-/**
- * Interface representing the context value of an individual form field.
- * @template TFieldValues - The type of field values.
- * @template TName - The name of the field.
- */
-export type FormFieldContextValue<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = {
-  /** The name of the field. */
-  name: TName;
-};
-
-/**
- * Interface representing the context value of an individual field item.
- */
-export type FieldItemContextValue = {
-  /** The unique identifier for the field item. */
-  id: string;
-};
-
-/**
- * Interface representing the return value of the useFormField hook.
- * @template TFieldValues - The type of field values.
- * @template TName - The name of the field.
- */
-export interface UseFormFieldReturn<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> {
-  /** The unique identifier for the field item. */
-  id: string;
-  /** The name of the field. */
-  name: TName;
-  /** The ID for the form item element. */
-  fieldItemId: string;
-  /** The ID for the form item description element. */
-  fieldDescriptionId: string;
-  /** The ID for the form item message element. */
-  fieldMessageId: string;
-  /** The error state of the field, if any. */
-  error?: FieldError;
-  /** Indicates if the field has been touched. */
-  isTouched: boolean;
-  /** Indicates if the field value has been modified. */
-  isDirty: boolean;
-  /** Indicates if the field is valid. */
-  invalid: boolean;
-  /** Indicates if the field is being validated. */
-  isValidating: boolean;
-}
-
-/**
- * Type representing the function to fetch default values asynchronously.
- * @template TFieldValues - The type of field values.
- */
-export type AsyncDefaultValues<TFieldValues> = (
-  payload?: unknown
-) => Promise<TFieldValues>;
-
-/**
- * Type representing the handler function for form submission.
- * @template TFieldValues - The type of field values.
- */
-export type FormSubmitHandler<TFieldValues> = (
-  values: TFieldValues
-) => Promise<void> | void;
-
-/**
- * Type representing the handler function for form changes.
- * @template TFieldValues - The type of field values.
- */
-export type FormChangeHandler<TFieldValues extends FieldValues> = (
-  formResponse: DeepPartialSkipArrayKey<TFieldValues>,
-  formErrors: FieldErrors<TFieldValues>,
-  canRemoveValidationForFields: Record<Path<TFieldValues>, boolean>
-) => void;
-
-/**
- * Type representing the function to render form fields.
- * @template TFieldValues - The type of field values.
- */
-export type RenderFieldsFunction<TFieldValues extends FieldValues> = (params: {
-  /** Whether the layout is fluid (responsive). */
-  fluid: boolean;
-  /** Number of columns in the layout. */
-  columns?: number;
-  /** The schema defining the fields in the form. */
-  schema: IFieldSchema<TFieldValues>[];
-  /** The set of visible fields in the form. */
-  visibleFields: Set<Path<TFieldValues>>;
-  /** Methods from react-hook-form for managing the form state. */
-  formMethods: UseFormReturn<TFieldValues>;
-  /** Whether the form is disabled. */
-  formDisabled?: boolean;
-  /** Whether the submit button is loading. */
-  submitButtonLoading?: boolean;
-}) => React.ReactNode;
-
-/**
- * Type representing the function to render a form field.
- * @template TFieldValues - The type of field values.
- */
-export type FieldRenderFunction<TFieldValues extends FieldValues> = (data: {
-  /** Methods from react-hook-form for managing the form state. */
-  formMethods: UseFormReturn<TFieldValues>;
-  /** The schema definition of the form field. */
-  formItem: IFieldSchema<TFieldValues>;
-  /** The errors in the form state. */
-  formErrors: FieldErrors<TFieldValues>;
-  /** Whether the form is disabled. */
-  formDisabled: boolean;
-  /** Whether the submit button is loading. */
-  submitButtonLoading?: boolean;
-}) => React.ReactNode;
-
-/**
- * Type representing the validation mode.
- */
-export type ValidationMode =
-  | "onBlur"
-  | "onChange"
-  | "onSubmit"
-  | "onTouched"
-  | "all";
-
-/**
- * Type representing the re-validation mode.
- */
-export type ReValidateMode = "onBlur" | "onChange" | "onSubmit";
-
-/**
- * Interface representing a condition for displaying a field based on other field values.
- * @template TFieldValues - The type of field values.
- */
-export interface DisplayCondition<TFieldValues extends FieldValues> {
-  /** The dependent field whose value will determine the condition. */
-  dependentField: Path<TFieldValues>;
-  /** The operator used to compare the dependent field's value. */
-  operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-  /** The value of the dependent field to compare against. */
-  dependentFieldValue: TFieldValues[Path<TFieldValues>];
-  /** The logical relation of the condition (e.g., "and"). */
-  relation?: "and";
-}
-
-/**
- * Interface representing a condition for removing validation from a field based on other field values.
- * @template TFieldValues - The type of field values.
- */
-export interface ValidationCondition<TFieldValues extends FieldValues> {
-  /** The dependent field whose value will determine the condition. */
-  dependentField: Path<TFieldValues>;
-  /** The operator used to compare the dependent field's value. */
-  operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-  /** The value of the dependent field to compare against. */
-  dependentFieldValue: TFieldValues[Path<TFieldValues>];
-}
-```
 
 ## Contributing
 

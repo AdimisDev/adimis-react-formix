@@ -262,7 +262,7 @@ const FormFlexFields = <TFieldValues extends FieldValues = FieldValues>({
   fluid = false,
   style,
   className,
-  columns = 2,
+  columns = 1,
   gap = "16px",
 }: FormFlexFieldProps) => {
   const { formMethods, formFields } = useSchemaFormContext<TFieldValues>();

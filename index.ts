@@ -1,6 +1,7 @@
 import "./src/global.css";
 import { useSchemaFormContext } from "./src/hooks/useSchemaFormContext";
 import SchemaFormProvider from "./src/context/form.provider";
+import { ThemeProvider, useTheme } from "@/context/theme.provider";
 
 export * from "./src/interface/form.interface";
 export {
@@ -20,4 +21,4 @@ export {
   useFormField,
   FieldErrorMessage,
 } from "./src/components/form";
-export { useSchemaFormContext, SchemaFormProvider };
+export { useSchemaFormContext, SchemaFormProvider, ThemeProvider, useTheme };
