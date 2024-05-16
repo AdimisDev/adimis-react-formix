@@ -1,5 +1,4 @@
-import React, { HTMLAttributes } from "react";
-import { HTMLInputAutoCompleteAttribute } from "react";
+import React, { HTMLAttributes, HTMLInputAutoCompleteAttribute } from "react";
 import {
   FieldErrors,
   FieldValues,
@@ -17,11 +16,11 @@ import { z, ZodTypeAny } from "zod";
 export type ZodSchemaObject<T> = Record<keyof T, ZodTypeAny>;
 
 /**
- * Interface for defining a field schema.
+ * Interface representing the schema for a form field.
  * @template TFieldValues - The type of field values.
  */
 export interface IFieldSchema<TFieldValues extends FieldValues> {
-  /** The key/path for the field within the form values. */
+  /** The key or path for the field within the form values. */
   key: Path<TFieldValues>;
   /** The label for the field, displayed in the form UI. */
   label?: string;
@@ -52,50 +51,23 @@ export interface IFieldSchema<TFieldValues extends FieldValues> {
     | "radio group"
     | "boolean";
   /** Options for select, multi-select, or radio group fields. */
-  options?: Array<{
-    label: string;
-    value: string;
-  }>;
+  options?: Array<{ label: string; value: string }>;
   /** Conditions for displaying the field based on other field values. */
-  displayConditions?: {
-    dependentField: Path<TFieldValues>;
-    operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-    dependentFieldValue: TFieldValues[Path<TFieldValues>];
-    relation?: "and";
-  }[];
+  displayConditions?: DisplayCondition<TFieldValues>[];
   /** Conditions for removing validation from the field based on other field values. */
-  removeValidationConditions?: {
-    dependentField: Path<TFieldValues>;
-    operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-    dependentFieldValue: TFieldValues[Path<TFieldValues>];
-    relation?: "and";
-  }[];
+  removeValidationConditions?: ValidationCondition<TFieldValues>[];
   /** Custom render function for the field. */
-  render: (data: {
-    formMethods: UseFormReturn<TFieldValues, any, undefined>;
-    formItem: IFieldSchema<TFieldValues>;
-    formErrors: FieldErrors<TFieldValues>;
-    formDisabled: boolean;
-    submitButtonLoading?: boolean;
-  }) => React.ReactNode;
+  render: FieldRenderFunction<TFieldValues>;
 }
 
 /**
- * Type for asynchronously fetching default values.
- * @template TFieldValues - The type of field values.
- */
-export type AsyncDefaultValues<TFieldValues> = (
-  payload?: unknown
-) => Promise<TFieldValues>;
-
-/**
- * Interface for schema form properties.
+ * Interface representing the properties of the form schema.
  * @template TFieldValues - The type of field values.
  */
 export interface ISchemaFormProps<TFieldValues extends FieldValues> {
   /** The unique identifier for the form. */
   formSlug: string;
-  /** The label/title of the form. */
+  /** The label or title of the form. */
   formLabel: string;
   /** A brief description of the form. */
   formDescription?: string;
@@ -118,39 +90,29 @@ export interface ISchemaFormProps<TFieldValues extends FieldValues> {
   /** Whether to enable validations. */
   enableValidations?: boolean;
   /** Validation mode (when validations are triggered). */
-  validationMode?:
-    | "onBlur"
-    | "onChange"
-    | "onSubmit"
-    | "onTouched"
-    | "all"
-    | undefined;
+  validationMode?: ValidationMode;
   /** Re-validation mode (when re-validations are triggered). */
-  reValidateMode?: "onBlur" | "onChange" | "onSubmit" | undefined;
+  reValidateMode?: ReValidateMode;
   /** Default values for the form fields. */
   defaultValues?:
     | DefaultValues<TFieldValues>
     | AsyncDefaultValues<TFieldValues>;
   /** Where to persist form responses (e.g., localStorage, sessionStorage). */
-  persistFormResponse?: "localStorage" | "sessionStorage" | undefined;
-  /** Callback for form submission. */
-  onSubmit?: (values: TFieldValues) => Promise<void> | void;
-  /** Callback for handling invalid form submissions. */
+  persistFormResponse?: "localStorage" | "sessionStorage";
+  /** Callback for form submission. Supports both normal and async functions. */
+  onSubmit?: FormSubmitHandler<TFieldValues>;
+  /** Callback for handling invalid form submissions. Supports both normal and async functions. */
   onInvalidSubmit?: SubmitErrorHandler<TFieldValues>;
   /** Callback for handling form changes. */
-  onChange?: (
-    formResponse: DeepPartialSkipArrayKey<TFieldValues>,
-    formErrors: FieldErrors<TFieldValues>,
-    canRemoveValidationForFields: Record<Path<TFieldValues>, boolean>
-  ) => void;
+  onChange?: FormChangeHandler<TFieldValues>;
 }
 
 /**
- * Interface for form context type.
+ * Interface representing the context of a form.
  * @template TFieldValues - The type of field values.
  */
 export interface FormContextType<TFieldValues extends FieldValues> {
-  /** The label/title of the form. */
+  /** The label or title of the form. */
   formLabel: string;
   /** The unique identifier for the form. */
   formSlug: string;
@@ -169,9 +131,9 @@ export interface FormContextType<TFieldValues extends FieldValues> {
   /** Whether the submit button is loading. */
   submitButtonLoading: boolean;
   /** Handler for form submission. */
-  handleOnSubmit: (values: TFieldValues) => void;
+  handleOnSubmit: FormSubmitHandler<TFieldValues>;
   /** Handler for invalid form submission. */
-  handleOnInvalidSubmit: (errors: FieldErrors<TFieldValues>) => void;
+  handleOnInvalidSubmit: SubmitErrorHandler<TFieldValues>;
   /** Function to render fields in a flexible layout. */
   renderFlexFields: (props: RenderFlexFieldsProps) => JSX.Element;
   /** Function to render the entire form. */
@@ -179,7 +141,7 @@ export interface FormContextType<TFieldValues extends FieldValues> {
 }
 
 /**
- * Interface for rendering form properties.
+ * Interface representing the properties for rendering the form.
  * @template TFieldValues - The type of field values.
  */
 export interface RenderFormProps<TFieldValues extends FieldValues> {
@@ -202,19 +164,11 @@ export interface RenderFormProps<TFieldValues extends FieldValues> {
   /** Loader for the submit button when loading. */
   submitButtonLoader?: React.ReactNode;
   /** Function to render form fields. */
-  renderFields?: (params: {
-    fluid: boolean;
-    columns?: number;
-    schema: IFieldSchema<TFieldValues>[];
-    visibleFields: Set<Path<TFieldValues>>;
-    formMethods: UseFormReturn<TFieldValues, any, undefined>;
-    formDisabled?: boolean;
-    submitButtonLoading?: boolean;
-  }) => React.ReactNode;
+  renderFields?: RenderFieldsFunction<TFieldValues>;
 }
 
 /**
- * Interface for rendering flexible fields.
+ * Interface representing the properties for rendering flexible fields.
  */
 export interface RenderFlexFieldsProps extends HTMLAttributes<HTMLDivElement> {
   /** Whether the layout is fluid (responsive). */
@@ -226,11 +180,11 @@ export interface RenderFlexFieldsProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Interface for the return value of the useSchemaForm hook.
+ * Interface representing the return value of the useSchemaForm hook.
  * @template TFieldValues - The type of field values.
  */
 export interface UseSchemaFormReturn<TFieldValues extends FieldValues> {
-  /** The label/title of the form. */
+  /** The label or title of the form. */
   formLabel: string;
   /** The unique identifier for the form. */
   formSlug: string;
@@ -249,9 +203,9 @@ export interface UseSchemaFormReturn<TFieldValues extends FieldValues> {
   /** Whether the form is disabled. */
   formDisabled: boolean;
   /** Handler for form submission. */
-  handleOnSubmit: (values: TFieldValues) => void;
+  handleOnSubmit: FormSubmitHandler<TFieldValues>;
   /** Handler for invalid form submission. */
-  handleOnInvalidSubmit: (errors: FieldErrors<TFieldValues>) => void;
+  handleOnInvalidSubmit: SubmitErrorHandler<TFieldValues>;
   /** Function to render fields in a flexible layout. */
   renderFlexFields: (props: RenderFlexFieldsProps) => JSX.Element;
   /** Function to render the entire form. */
@@ -259,10 +213,10 @@ export interface UseSchemaFormReturn<TFieldValues extends FieldValues> {
 }
 
 /**
- * Interface for flexible field properties in a form layout.
+ * Interface representing the properties for flexible fields in a form layout.
  */
 export interface FormFlexFieldProps {
-  /** Determines if the layout is fluid/responsive. */
+  /** Determines if the layout is fluid or responsive. */
   fluid?: boolean;
   /** Custom CSS styles for the flexible field container. */
   style?: React.CSSProperties;
@@ -275,20 +229,7 @@ export interface FormFlexFieldProps {
 }
 
 /**
- * Type for the context value of an individual form field.
- * @template TFieldValues - The type of field values.
- * @template TName - The name of the field.
- */
-export type FormFieldContextValue<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = {
-  /** The name of the field. */
-  name: TName;
-};
-
-/**
- * Interface for the properties of the main body of the form.
+ * Interface representing the properties of the form body.
  */
 export interface FormBodyProps {
   /** Determines if the form should be wrapped in a panel (default is true). */
@@ -302,7 +243,20 @@ export interface FormBodyProps {
 }
 
 /**
- * Type for the context value of an individual field item.
+ * Interface representing the context value of an individual form field.
+ * @template TFieldValues - The type of field values.
+ * @template TName - The name of the field.
+ */
+export type FormFieldContextValue<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = {
+  /** The name of the field. */
+  name: TName;
+};
+
+/**
+ * Interface representing the context value of an individual field item.
  */
 export type FieldItemContextValue = {
   /** The unique identifier for the field item. */
@@ -310,8 +264,8 @@ export type FieldItemContextValue = {
 };
 
 /**
- * Interface for the return value of the useFormField hook.
- * @template TFieldValues - The type of the field values.
+ * Interface representing the return value of the useFormField hook.
+ * @template TFieldValues - The type of field values.
  * @template TName - The name of the field.
  */
 export interface UseFormFieldReturn<
@@ -336,6 +290,113 @@ export interface UseFormFieldReturn<
   isDirty: boolean;
   /** Indicates if the field is valid. */
   invalid: boolean;
-  /** Indicated if the field is being validated*/
+  /** Indicates if the field is being validated. */
   isValidating: boolean;
+}
+
+/**
+ * Type representing the function to fetch default values asynchronously.
+ * @template TFieldValues - The type of field values.
+ */
+export type AsyncDefaultValues<TFieldValues> = (
+  payload?: unknown
+) => Promise<TFieldValues>;
+
+/**
+ * Type representing the handler function for form submission.
+ * @template TFieldValues - The type of field values.
+ */
+export type FormSubmitHandler<TFieldValues> = (
+  values: TFieldValues
+) => Promise<void> | void;
+
+/**
+ * Type representing the handler function for form changes.
+ * @template TFieldValues - The type of field values.
+ */
+export type FormChangeHandler<TFieldValues extends FieldValues> = (
+  formResponse: DeepPartialSkipArrayKey<TFieldValues>,
+  formErrors: FieldErrors<TFieldValues>,
+  canRemoveValidationForFields: Record<Path<TFieldValues>, boolean>
+) => void;
+
+/**
+ * Type representing the function to render form fields.
+ * @template TFieldValues - The type of field values.
+ */
+export type RenderFieldsFunction<TFieldValues extends FieldValues> = (params: {
+  /** Whether the layout is fluid (responsive). */
+  fluid: boolean;
+  /** Number of columns in the layout. */
+  columns?: number;
+  /** The schema defining the fields in the form. */
+  schema: IFieldSchema<TFieldValues>[];
+  /** The set of visible fields in the form. */
+  visibleFields: Set<Path<TFieldValues>>;
+  /** Methods from react-hook-form for managing the form state. */
+  formMethods: UseFormReturn<TFieldValues>;
+  /** Whether the form is disabled. */
+  formDisabled?: boolean;
+  /** Whether the submit button is loading. */
+  submitButtonLoading?: boolean;
+}) => React.ReactNode;
+
+/**
+ * Type representing the function to render a form field.
+ * @template TFieldValues - The type of field values.
+ */
+export type FieldRenderFunction<TFieldValues extends FieldValues> = (data: {
+  /** Methods from react-hook-form for managing the form state. */
+  formMethods: UseFormReturn<TFieldValues>;
+  /** The schema definition of the form field. */
+  formItem: IFieldSchema<TFieldValues>;
+  /** The errors in the form state. */
+  formErrors: FieldErrors<TFieldValues>;
+  /** Whether the form is disabled. */
+  formDisabled: boolean;
+  /** Whether the submit button is loading. */
+  submitButtonLoading?: boolean;
+}) => React.ReactNode;
+
+/**
+ * Type representing the validation mode.
+ */
+export type ValidationMode =
+  | "onBlur"
+  | "onChange"
+  | "onSubmit"
+  | "onTouched"
+  | "all";
+
+/**
+ * Type representing the re-validation mode.
+ */
+export type ReValidateMode = "onBlur" | "onChange" | "onSubmit";
+
+/**
+ * Interface representing a condition for displaying a field based on other field values.
+ * @template TFieldValues - The type of field values.
+ */
+export interface DisplayCondition<TFieldValues extends FieldValues> {
+  /** The dependent field whose value will determine the condition. */
+  dependentField: Path<TFieldValues>;
+  /** The operator used to compare the dependent field's value. */
+  operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+  /** The value of the dependent field to compare against. */
+  dependentFieldValue: TFieldValues[Path<TFieldValues>];
+  /** The logical relation of the condition (e.g., "and"). */
+  relation?: "and";
+}
+
+/**
+ * Interface representing a condition for removing validation from a field based on other field values.
+ * @template TFieldValues - The type of field values.
+ */
+export interface ValidationCondition<TFieldValues extends FieldValues> {
+  /** The dependent field whose value will determine the condition. */
+  dependentField: Path<TFieldValues>;
+  /** The operator used to compare the dependent field's value. */
+  operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+  /** The value of the dependent field to compare against. */
+  dependentFieldValue: TFieldValues[Path<TFieldValues>];
 }

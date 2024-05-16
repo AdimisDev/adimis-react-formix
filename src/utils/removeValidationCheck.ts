@@ -1,5 +1,5 @@
 import { checkRemoveValidationCondition } from "./checkRemoveValidationCondition";
-import { IFieldSchema } from "../interface/form.interface";
+import { IFieldSchema, ValidationCondition } from "../interface/form.interface";
 import { FieldErrors, FieldValues } from "react-hook-form";
 
 export function onErrorRemoveValidationCheck<TFieldValues extends FieldValues>(
@@ -14,12 +14,7 @@ export function onErrorRemoveValidationCheck<TFieldValues extends FieldValues>(
     const allRemoveValidationChecks: boolean[] = Object.keys(errors).map(
       (key) => {
         const errorFieldRemoveValidationConditions:
-          | {
-              dependentField: string;
-              operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-              dependentFieldValue: any;
-              relation?: "and";
-            }[]
+          | ValidationCondition<TFieldValues>[]
           | undefined = schema.find(
           (field) => field.key === key
         )?.removeValidationConditions;
@@ -65,12 +60,7 @@ export function onChangeRemoveValidationCheck<TFieldValues extends FieldValues>(
 ) {
   const isEveryCheckValid = Object.keys(formResponse).map((key) => {
     const errorFieldRemoveValidationConditions:
-      | {
-          dependentField: string;
-          operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-          dependentFieldValue: any;
-          relation?: "and";
-        }[]
+      | ValidationCondition<TFieldValues>[]
       | undefined = schema.find(
       (field) => field.key === key
     )?.removeValidationConditions;
