@@ -12,7 +12,8 @@
   "files": [
     "dist/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "docs"
   ],
   "publishConfig": {
     "access": "public"
@@ -32,10 +33,11 @@
   "homepage": "https://github.com/AdimisDev/@adimis-react-formix-elements/blob/main/README.md",
   "scripts": {
     "dev": "vite",
+    "docs": "typedoc --entryPointStrategy expand",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "watch": "concurrently \"tsc --watch\" \"vite build --watch\""
+    "watch": "concurrently \"tsc --watch\" \"vite build --watch\" \"npm run docs --watch\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.0",
@@ -85,6 +87,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "concurrently": "^8.2.2",
-    "vite-plugin-dts": "^3.9.1"
+    "vite-plugin-dts": "^3.9.1",
+    "typedoc": "^0.25.13"
   }
 }

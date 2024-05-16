@@ -342,3 +342,7 @@ We welcome contributions to `@adimis/react-formix`. If you have suggestions for 
 ## License
 
 This project is licensed under the GPL-3.0-only License. See the [LICENSE](https://github.com/AdimisDev/adimis-react-formix/blob/main/License) file for details.
+
+## Additional Information
+
+You can find detailed documentation in the docs folder. Open the index.html file located at `node_modules\@adimis\react-formix\docs\index.html` in a live server to access the documentation.

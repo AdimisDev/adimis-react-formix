@@ -1,0 +1,21 @@
+{
+  "entryPoints": [
+    "index.ts",
+    "src/context/form.provider.tsx",
+    "src/context/form.context.tsx",
+    "src/hooks/useSchemaFormContext.tsx"
+  ],
+  "out": "docs",
+  "exclude": [
+    "**/__tests__/**/*",
+    "**/*.spec.ts",
+    "src/App.tsx",
+    "src/main.tsx"
+  ],
+  "includeVersion": true,
+  "theme": "default",
+  "excludePrivate": true,
+  "excludeExternals": true,
+  "excludeNotDocumented": false,
+  "readme": "README.md"
+}
