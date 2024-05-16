@@ -1,7 +1,5 @@
 # @adimis/react-formix
 
-## Overview
-
 Welcome to `@adimis/react-formix`, a versatile and powerful React library for creating dynamic forms using a schema-based approach. This library leverages the power of React, Zod for schema validation, and react-hook-form for form state management. Whether you need to create a custom form from scratch using the `SchemaFormProvider` and `FormContext` or utilize prebuilt components for rapid development, `@adimis/react-formix` has you covered.
 
 ## Features
