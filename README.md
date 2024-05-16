@@ -781,4 +781,4 @@ We welcome contributions to `@adimis/react-formix`. If you have suggestions for 
 
 ## License
 
-This project is licensed under the GPL-3.0-only License. See the [LICENSE](https://github.com/AdimisDev/adimis-react-formix/blob/main/LICENSE) file for details.
+This project is licensed under the GPL-3.0-only License. See the [LICENSE](https://github.com/AdimisDev/adimis-react-formix/blob/main/License) file for details.
