@@ -327,6 +327,14 @@ A hook for accessing the form field context and state. It provides field-level i
 
 A hook for accessing the schema form context. It provides access to the form's state and methods, enabling interaction with the form at a higher level.
 
+### `ThemeProvider`
+
+Provides theme context to its children, allowing for dynamic theme changes and customization across the application.
+
+### `useTheme`
+
+A hook for accessing the theme context. It provides the current theme and a function to update the theme.
+
 ## Contributing
 
 We welcome contributions to `@adimis/react-formix`. If you have suggestions for new features, improvements, or bug fixes, please open an issue or submit a pull request on our GitHub repository.
