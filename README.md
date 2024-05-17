@@ -42,48 +42,48 @@ Welcome to `@adimis/react-formix`, the ultimate React library for creating dynam
 
    @layer base {
      :root {
-       --background: #ffffff;
-       --foreground: #0a0f1a;
-       --card: #ffffff;
-       --card-foreground: #0a0f1a;
-       --popover: #ffffff;
-       --popover-foreground: #0a0f1a;
-       --primary: #1d2b53;
-       --primary-foreground: #e6f7ff;
-       --secondary: #eaf3ff;
-       --secondary-foreground: #1d2b53;
-       --muted: #eaf3ff;
-       --muted-foreground: #697a96;
-       --accent: #eaf3ff;
-       --accent-foreground: #1d2b53;
-       --destructive: #f97066;
-       --destructive-foreground: #e6f7ff;
-       --border: #d8e1ed;
-       --input: #d8e1ed;
-       --ring: #0a0f1a;
-       --radius: 0.5rem;
+       --background: hsl(0, 0%, 100%);
+       --foreground: hsl(222.2, 84%, 4.9%);
+       --card: hsl(0, 0%, 100%);
+       --card-foreground: hsl(222.2, 84%, 4.9%);
+       --popover: hsl(0, 0%, 100%);
+       --popover-foreground: hsl(222.2, 84%, 4.9%);
+       --primary: hsl(221.2, 83.2%, 53.3%);
+       --primary-foreground: hsl(210, 40%, 98%);
+       --secondary: hsl(210, 40%, 96.1%);
+       --secondary-foreground: hsl(222.2, 47.4%, 11.2%);
+       --muted: hsl(210, 40%, 96.1%);
+       --muted-foreground: hsl(215.4, 16.3%, 46.9%);
+       --accent: hsl(210, 40%, 96.1%);
+       --accent-foreground: hsl(222.2, 47.4%, 11.2%);
+       --destructive: hsl(0, 84.2%, 60.2%);
+       --destructive-foreground: hsl(210, 40%, 98%);
+       --border: hsl(214.3, 31.8%, 91.4%);
+       --input: hsl(214.3, 31.8%, 91.4%);
+       --ring: hsl(221.2, 83.2%, 53.3%);
+       --radius: 1rem;
      }
 
      .dark {
-       --background: #0a0f1a;
-       --foreground: #e6f7ff;
-       --card: #0a0f1a;
-       --card-foreground: #e6f7ff;
-       --popover: #0a0f1a;
-       --popover-foreground: #e6f7ff;
-       --primary: #e6f7ff;
-       --primary-foreground: #1d2b53;
-       --secondary: #1f2c38;
-       --secondary-foreground: #e6f7ff;
-       --muted: #1f2c38;
-       --muted-foreground: #99aabb;
-       --accent: #1f2c38;
-       --accent-foreground: #e6f7ff;
-       --destructive: #66171d;
-       --destructive-foreground: #e6f7ff;
-       --border: #1f2c38;
-       --input: #1f2c38;
-       --ring: #a3b5c6;
+       --background: hsl(222.2, 84%, 4.9%);
+       --foreground: hsl(210, 40%, 98%);
+       --card: hsl(222.2, 84%, 4.9%);
+       --card-foreground: hsl(210, 40%, 98%);
+       --popover: hsl(222.2, 84%, 4.9%);
+       --popover-foreground: hsl(210, 40%, 98%);
+       --primary: hsl(217.2, 91.2%, 59.8%);
+       --primary-foreground: hsl(222.2, 47.4%, 11.2%);
+       --secondary: hsl(217.2, 32.6%, 17.5%);
+       --secondary-foreground: hsl(210, 40%, 98%);
+       --muted: hsl(217.2, 32.6%, 17.5%);
+       --muted-foreground: hsl(215, 20.2%, 65.1%);
+       --accent: hsl(217.2, 32.6%, 17.5%);
+       --accent-foreground: hsl(210, 40%, 98%);
+       --destructive: hsl(0, 62.8%, 30.6%);
+       --destructive-foreground: hsl(210, 40%, 98%);
+       --border: hsl(217.2, 32.6%, 17.5%);
+       --input: hsl(217.2, 32.6%, 17.5%);
+       --ring: hsl(224.3, 76.3%, 48%);
      }
    }
 
@@ -201,7 +201,7 @@ import {
   FormTitle,
   ISchemaFormProps,
   ThemeProvider,
-} from "@adimis/react-formix"; // 120.3k (gzipped: 34.3k)
+} from "@adimis/react-formix"; // 120.1k (gzipped: 34.2k)
 import "@adimis/react-formix/dist/style.css";
 
 interface SignUp {

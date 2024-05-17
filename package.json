@@ -2,7 +2,7 @@
   "name": "@adimis/react-formix",
   "author": "AdimisDev",
   "private": false,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "license": "GPL-3.0-only",
   "main": "dist/index.umd.js",
@@ -25,12 +25,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/AdimisDev/@adimis-react-formix-elements.git"
+    "url": "https://github.com/AdimisDev/adimis-react-formix"
   },
   "bugs": {
-    "url": "https://github.com/AdimisDev/@adimis-react-formix-elements/issues"
+    "url": "https://github.com/AdimisDev/adimis-react-formix/issues"
   },
-  "homepage": "https://github.com/AdimisDev/@adimis-react-formix-elements/blob/main/README.md",
+  "homepage": "https://github.com/AdimisDev/adimis-react-formix/blob/main/README.md",
   "scripts": {
     "dev": "vite",
     "docs": "typedoc --entryPointStrategy expand",
