@@ -5,15 +5,15 @@ import {
   UseSchemaFormReturn,
 } from "../interface/form.interface";
 import useSchemaForm from "../hooks/useSchemaForm";
-import { FormContext } from "./form.context";
+import { FormixFormProvider } from "./form.context";
 
 /**
- * SchemaFormProvider component that provides the schema form context to its children.
+ * FormixProvider component that provides the formix form context to its children.
  * @template TFieldValues - The type of field values.
  * @param {ISchemaFormProps<TFieldValues> & { children: React.ReactNode }} props - The properties for the schema form provider.
- * @returns {JSX.Element} - The SchemaFormProvider component.
+ * @returns {JSX.Element} - The FormixProvider component.
  */
-const SchemaFormProvider = <TFieldValues extends FieldValues>(
+const FormixProvider = <TFieldValues extends FieldValues>(
   props: ISchemaFormProps<TFieldValues> & { children: React.ReactNode }
 ): JSX.Element => {
   // Use the custom useSchemaForm hook to get the form state and methods.
@@ -23,10 +23,10 @@ const SchemaFormProvider = <TFieldValues extends FieldValues>(
   const memonizedValue = useMemo(() => value, [value]);
 
   return (
-    <FormContext.Provider value={memonizedValue}>
+    <FormixFormProvider.Provider value={memonizedValue}>
       {props.children}
-    </FormContext.Provider>
+    </FormixFormProvider.Provider>
   );
 };
 
-export default SchemaFormProvider;
+export default FormixProvider;

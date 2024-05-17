@@ -111,7 +111,7 @@ export interface ISchemaFormProps<TFieldValues extends FieldValues> {
  * Interface representing the context of a form.
  * @template TFieldValues - The type of field values.
  */
-export interface FormContextType<TFieldValues extends FieldValues> {
+export interface FormixFormProviderType<TFieldValues extends FieldValues> {
   /** The label or title of the form. */
   formLabel: string;
   /** The unique identifier for the form. */

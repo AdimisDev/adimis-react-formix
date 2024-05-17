@@ -26,13 +26,13 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import SchemaFormProvider from "@/context/form.provider";
-import { useSchemaFormContext } from "@/hooks";
+import FormixProvider from "@/context/form.provider";
+import { useFormix } from "@/hooks";
 
 /**
- * Provides a context for the form using the SchemaFormProvider.
+ * Provides a context for the form using the FormixProvider.
  */
-const FormContext = SchemaFormProvider;
+const FormixFormProvider = FormixProvider;
 
 const PanelContext = React.createContext<boolean>(true);
 const FormBodyContext = React.createContext<boolean>(false);
@@ -81,7 +81,7 @@ const useFormField = <
 >(): UseFormFieldReturn<TFieldValues, TName> => {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FieldItemContext);
-  const { formMethods } = useSchemaFormContext();
+  const { formMethods } = useFormix();
   const { getFieldState, formState } = formMethods;
 
   if (!fieldContext) {
@@ -116,7 +116,7 @@ const FormBody = React.forwardRef<
     ref: React.LegacyRef<HTMLFormElement | HTMLDivElement>
   ) => {
     const { handleOnSubmit, handleOnInvalidSubmit, formMethods } =
-      useSchemaFormContext();
+      useFormix();
     const Container = panel ? Card : "div";
 
     return (
@@ -221,7 +221,7 @@ const FormTitle = React.forwardRef<
   useFormHeaderContext();
   const panel = React.useContext(PanelContext);
   const Title = panel ? CardTitle : "h2";
-  const { formLabel } = useSchemaFormContext();
+  const { formLabel } = useFormix();
   return (
     <Title ref={ref} className={cn(className)} {...props}>
       {children ? children : formLabel}
@@ -242,7 +242,7 @@ const FormDescription = React.forwardRef<
 >(({ children, className, ...props }, ref) => {
   useFormHeaderContext();
   const panel = React.useContext(PanelContext);
-  const { formDescription } = useSchemaFormContext();
+  const { formDescription } = useFormix();
   const Description = panel ? CardDescription : "p";
   return (
     <Description ref={ref} className={cn(className)} {...props}>
@@ -254,7 +254,7 @@ FormDescription.displayName = "FormDescription";
 
 /**
  * Component for rendering flexible form fields in a grid layout.
- * Expected Parent: FormBody or any context where SchemaFormProvider is used (due to useSchemaFormContext).
+ * Expected Parent: FormBody or any context where FormixProvider is used (due to useFormix).
  * @param {FormFlexFieldProps} props - The properties for the flexible form fields.
  * @returns {JSX.Element} The FormFlexFields component.
  */
@@ -265,7 +265,7 @@ const FormFlexFields = <TFieldValues extends FieldValues = FieldValues>({
   columns = 1,
   gap = "16px",
 }: FormFlexFieldProps) => {
-  const { formMethods, formFields } = useSchemaFormContext<TFieldValues>();
+  const { formMethods, formFields } = useFormix<TFieldValues>();
   const { control } = formMethods;
 
   return (
@@ -488,7 +488,7 @@ FieldErrorMessage.displayName = "FieldErrorMessage";
 
 export {
   useFormField,
-  FormContext,
+  FormixFormProvider,
   FormBody,
   FieldItem,
   FieldLabel,

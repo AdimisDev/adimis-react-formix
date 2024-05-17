@@ -1,6 +1,6 @@
 import { useEnterKeySubmit } from "./useEnterKeySubmit";
 import useSchemaForm from "./useSchemaForm";
-import { useSchemaFormContext } from "./useSchemaFormContext";
+import { useFormix } from "./useFormix";
 
 /**
  * Custom hook to handle form submission using the Enter key.
@@ -15,7 +15,7 @@ export { useEnterKeySubmit };
 export { useSchemaForm };
 
 /**
- * Custom hook to access the schema form context.
- * @module useSchemaFormContext
+ * Custom hook to access the formix form context.
+ * @module useFormix
  */
-export { useSchemaFormContext };
+export { useFormix };

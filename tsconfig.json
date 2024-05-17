@@ -25,6 +25,6 @@
     "allowImportingTsExtensions": true
   },
   "include": ["./src/**/*", "./index.ts"],
-  "exclude": ["node_modules", "dist", "archive"],
+  "exclude": ["node_modules", "dist", "archive", "test"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

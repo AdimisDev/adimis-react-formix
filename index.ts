@@ -1,14 +1,12 @@
-import "./src/global.css";
-import { useSchemaFormContext } from "./src/hooks/useSchemaFormContext";
-import SchemaFormProvider from "./src/context/form.provider";
+import "./src/style/global.css";
+import { useFormix } from "./src/hooks/useFormix";
+import FormixProvider from "./src/context/form.provider";
 import { ThemeProvider, useTheme } from "@/context/theme.provider";
-
-export * from "./src/interface/form.interface";
-export {
+import {
   FieldDescription,
   FormBody,
   FormContent,
-  FormContext,
+  FormixFormProvider,
   FieldControl,
   FormDescription,
   FormField,
@@ -21,4 +19,26 @@ export {
   useFormField,
   FieldErrorMessage,
 } from "./src/components/form";
-export { useSchemaFormContext, SchemaFormProvider, ThemeProvider, useTheme };
+
+export * from "./src/interface/form.interface";
+export {
+  useFormix,
+  FormixProvider,
+  ThemeProvider,
+  useTheme,
+  FieldDescription,
+  FormBody,
+  FormContent,
+  FormixFormProvider,
+  FieldControl,
+  FormDescription,
+  FormField,
+  FormFlexFields,
+  FormFooter,
+  FormHeader,
+  FieldItem,
+  FieldLabel,
+  FormTitle,
+  useFormField,
+  FieldErrorMessage,
+};

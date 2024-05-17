@@ -1,8 +1,8 @@
 import { createContext } from "react";
-import { FormContextType } from "../interface/form.interface";
+import { FormixFormProviderType } from "../interface/form.interface";
 
 /**
- * FormContext to provide the form state and methods throughout the component tree.
- * @type {React.Context<FormContextType<any> | null>}
+ * FormixFormProvider to provide the form state and methods throughout the component tree.
+ * @type {React.Context<FormixFormProviderType<any> | null>}
  */
-export const FormContext = createContext<FormContextType<any> | null>(null);
+export const FormixFormProvider = createContext<FormixFormProviderType<any> | null>(null);

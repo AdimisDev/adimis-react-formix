@@ -3,7 +3,7 @@
     "index.ts",
     "src/context/form.provider.tsx",
     "src/context/form.context.tsx",
-    "src/hooks/useSchemaFormContext.tsx"
+    "src/hooks/useFormix.tsx"
   ],
   "out": "docs",
   "exclude": [
