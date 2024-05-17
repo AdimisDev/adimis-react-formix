@@ -407,56 +407,6 @@ export interface ValidationCondition<TFieldValues extends FieldValues> {
 export type Theme = "dark" | "light" | "system";
 
 /**
- * Interface representing the theme colors configuration.
- */
-export interface ThemeColors {
-  root?: {
-    /** Background color for the root element. */
-    background?: string;
-    /** Foreground color for the root element. */
-    foreground?: string;
-    /** Background color for cards. */
-    card?: string;
-    /** Foreground color for cards. */
-    "card-foreground"?: string;
-    /** Background color for popovers. */
-    popover?: string;
-    /** Foreground color for popovers. */
-    "popover-foreground"?: string;
-    /** Primary color. */
-    primary?: string;
-    /** Foreground color for primary elements. */
-    "primary-foreground"?: string;
-    /** Secondary color. */
-    secondary?: string;
-    /** Foreground color for secondary elements. */
-    "secondary-foreground"?: string;
-    /** Muted color. */
-    muted?: string;
-    /** Foreground color for muted elements. */
-    "muted-foreground"?: string;
-    /** Accent color. */
-    accent?: string;
-    /** Foreground color for accent elements. */
-    "accent-foreground"?: string;
-    /** Color for destructive actions. */
-    destructive?: string;
-    /** Foreground color for destructive actions. */
-    "destructive-foreground"?: string;
-    /** Border color. */
-    border?: string;
-    /** Input field color. */
-    input?: string;
-    /** Color for focus rings. */
-    ring?: string;
-    /** Border radius value. */
-    radius?: string;
-  };
-  /** Dark mode theme colors. */
-  dark?: ThemeColors["root"];
-}
-
-/**
  * Interface representing the properties for the ThemeProvider component.
  */
 export interface ThemeProviderProps {
@@ -466,8 +416,6 @@ export interface ThemeProviderProps {
   defaultTheme?: Theme;
   /** The key used for storing the theme preference in storage. */
   storageKey?: string;
-  /** The color configuration for the themes. */
-  themeColors?: ThemeColors;
 }
 
 /**

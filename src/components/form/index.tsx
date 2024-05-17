@@ -115,8 +115,7 @@ const FormBody = React.forwardRef<
     { panel = true, containerProps, formProps, children },
     ref: React.LegacyRef<HTMLFormElement | HTMLDivElement>
   ) => {
-    const { handleOnSubmit, handleOnInvalidSubmit, formMethods } =
-      useFormix();
+    const { handleOnSubmit, handleOnInvalidSubmit, formMethods } = useFormix();
     const Container = panel ? Card : "div";
 
     return (
@@ -288,7 +287,7 @@ const FormFlexFields = <TFieldValues extends FieldValues = FieldValues>({
             !fluid || formField.fieldStyle
               ? formField.fieldStyle
               : {
-                  maxWidth: "90%",
+                  maxWidth: "100%",
                 }
           }
           className={formField.fieldClassName}

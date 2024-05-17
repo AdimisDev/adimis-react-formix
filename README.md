@@ -187,8 +187,9 @@ Here's an example of how to create a basic signup form using `@adimis/react-form
 ```tsx
 "use client";
 
-import React from "react";
 import { z } from "zod";
+import { Input } from "./components/input";
+import { Button } from "./components/button";
 import {
   FormBody,
   FormContent,
@@ -200,8 +201,7 @@ import {
   FormTitle,
   ISchemaFormProps,
   ThemeProvider,
-  ThemeColors,
-} from "@adimis/react-formix";
+} from "@adimis/react-formix"; // 120.3k (gzipped: 34.3k)
 import "@adimis/react-formix/dist/style.css";
 
 interface SignUp {
@@ -218,7 +218,7 @@ interface SignUp {
   expertise: string[];
 }
 
-const Form = () => {
+const App = () => {
   const schemaFormProps: ISchemaFormProps<SignUp> = {
     formLabel: "Example Barebone Form",
     formSlug: "example-barebone-form",
@@ -239,6 +239,27 @@ const Form = () => {
           .string()
           .min(1, "Username is required")
           .max(20, "Username must not exceed 20 characters"),
+        render: ({
+          formDisabled,
+          formItem,
+          formMethods,
+          submitButtonLoading,
+        }) => (
+          <Input
+            type={formItem.type}
+            id={formItem.key}
+            disabled={formDisabled || submitButtonLoading}
+            style={{
+              width: "100%",
+              height: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              padding: "10px",
+              margin: "5px 0",
+            }}
+            {...formMethods.register(formItem.key)}
+          />
+        ),
       },
       {
         key: "email",
@@ -252,6 +273,27 @@ const Form = () => {
           .string()
           .email("Enter a valid email address")
           .min(1, "Email is required"),
+        render: ({
+          formDisabled,
+          formItem,
+          formMethods,
+          submitButtonLoading,
+        }) => (
+          <Input
+            type={formItem.type}
+            id={formItem.key}
+            disabled={formDisabled || submitButtonLoading}
+            style={{
+              width: "100%",
+              height: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              padding: "10px",
+              margin: "5px 0",
+            }}
+            {...formMethods.register(formItem.key)}
+          />
+        ),
       },
       {
         key: "address",
@@ -264,6 +306,27 @@ const Form = () => {
         validations: z
           .string()
           .min(10, "Address should be at least 10 characters"),
+        render: ({
+          formDisabled,
+          formItem,
+          formMethods,
+          submitButtonLoading,
+        }) => (
+          <Input
+            type={formItem.type}
+            id={formItem.key}
+            disabled={formDisabled || submitButtonLoading}
+            style={{
+              width: "100%",
+              height: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              padding: "10px",
+              margin: "5px 0",
+            }}
+            {...formMethods.register(formItem.key)}
+          />
+        ),
       },
       {
         key: "phone",
@@ -275,8 +338,28 @@ const Form = () => {
         defaultValue: "",
         validations: z
           .string()
-```tsx
           .regex(/^\+?(\d.*){10,}$/, "Enter a valid phone number"),
+        render: ({
+          formDisabled,
+          formItem,
+          formMethods,
+          submitButtonLoading,
+        }) => (
+          <Input
+            type={formItem.type}
+            id={formItem.key}
+            disabled={formDisabled || submitButtonLoading}
+            style={{
+              width: "100%",
+              height: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              padding: "10px",
+              margin: "5px 0",
+            }}
+            {...formMethods.register(formItem.key)}
+          />
+        ),
       },
       {
         key: "password",
@@ -304,6 +387,27 @@ const Form = () => {
             operator: "!==",
           },
         ],
+        render: ({
+          formDisabled,
+          formItem,
+          formMethods,
+          submitButtonLoading,
+        }) => (
+          <Input
+            type={formItem.type}
+            id={formItem.key}
+            disabled={formDisabled || submitButtonLoading}
+            style={{
+              width: "100%",
+              height: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              padding: "10px",
+              margin: "5px 0",
+            }}
+            {...formMethods.register(formItem.key)}
+          />
+        ),
       },
     ],
     defaultValues: {
@@ -322,54 +426,8 @@ const Form = () => {
       ),
   };
 
-  const themeColors: ThemeColors = {
-    root: {
-      background: "#ffffff",
-      foreground: "#1e1e1e",
-      card: "#ffffff",
-      "card-foreground": "#1e1e1e",
-      popover: "#ffffff",
-      "popover-foreground": "#1e1e1e",
-      primary: "#3b82f6",
-      "primary-foreground": "#d9eefe",
-      secondary: "#f3f4f6",
-      "secondary-foreground": "#2e2e2e",
-      muted: "#f3f4f6",
-      "muted-foreground": "#68737d",
-      accent: "#f3f4f6",
-      "accent-foreground": "#2e2e2e",
-      destructive: "#ff6b6b",
-      "destructive-foreground": "#d9eefe",
-      border: "#d1d5db",
-      input: "#d1d5db",
-      ring: "#3b82f6",
-      radius: "1rem",
-    },
-    dark: {
-      background: "#1e1e1e",
-      foreground: "#d9eefe",
-      card: "#1e1e1e",
-      "card-foreground": "#d9eefe",
-      popover: "#1e1e1e",
-      "popover-foreground": "#d9eefe",
-      primary: "#4f46e5",
-      "primary-foreground": "#2e2e2e",
-      secondary: "#1f2937",
-      "secondary-foreground": "#d9eefe",
-      muted: "#1f2937",
-      "muted-foreground": "#a0aec0",
-      accent: "#1f2937",
-      "accent-foreground": "#d9eefe",
-      destructive: "#b91c1c",
-      "destructive-foreground": "#d9eefe",
-      border: "#1f2937",
-      input: "#1f2937",
-      ring: "#609ff2",
-    },
-  };
-
   return (
-    <ThemeProvider defaultTheme="dark" themeColors={themeColors}>
+    <ThemeProvider defaultTheme="dark">
       <FormixFormProvider {...schemaFormProps}>
         <FormBody>
           <FormHeader>
@@ -377,24 +435,12 @@ const Form = () => {
             <FormDescription />
           </FormHeader>
           <FormContent>
-            <FormFlexFields fluid />
+            <FormFlexFields fluid columns={2} />
           </FormContent>
           <FormFooter>
-            <button
-              type="submit"
-              style={{
-                backgroundColor: "#111111",
-                color: "#f1f1f1",
-                padding: "0.5rem 1rem",
-                borderRadius: "0.5rem",
-                border: "none",
-                outline: "none",
-                cursor: "pointer",
-                fontSize: "1rem",
-              }}
-            >
+            <Button type="submit" className="mt-5">
               Submit
-            </button>
+            </Button>
           </FormFooter>
         </FormBody>
       </FormixFormProvider>
@@ -402,7 +448,7 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default App;
 ```
 
 ## Exports

@@ -1,6 +1,5 @@
 import {
   Theme,
-  ThemeColors,
   ThemeProviderProps,
   ThemeProviderState,
 } from "@/interface/form.interface";
@@ -17,7 +16,6 @@ export function ThemeProvider({
   children,
   defaultTheme = "system",
   storageKey = "vite-ui-theme",
-  themeColors,
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
@@ -57,37 +55,9 @@ export function ThemeProvider({
     },
   };
 
-  const generateThemeVars = (
-    currentTheme: Theme,
-    theme?: ThemeColors
-  ): React.CSSProperties | undefined => {
-    if (theme) {
-      const themeVars: Record<string, any> = {};
-      let themeSelection = theme.root;
-
-      if (currentTheme === "dark" && theme.dark) {
-        themeSelection = theme.dark;
-      } else if (currentTheme === "light" && theme.root) {
-        themeSelection = theme.root;
-      }
-
-      if (themeSelection) {
-        // Convert themeSelection properties to CSS variables
-        Object.entries(themeSelection).forEach(([key, value]) => {
-          const cssVar = `--${key}`;
-          themeVars[cssVar] = value;
-        });
-      }
-
-      return themeVars as React.CSSProperties;
-    } else {
-      return undefined;
-    }
-  };
-
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      <div style={generateThemeVars(theme, themeColors)}>{children}</div>
+      <div>{children}</div>
     </ThemeProviderContext.Provider>
   );
 }
