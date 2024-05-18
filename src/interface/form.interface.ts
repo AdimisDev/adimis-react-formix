@@ -234,12 +234,18 @@ export interface FormFlexFieldProps {
 export interface FormBodyProps {
   /** Determines if the form should be wrapped in a panel (default is true). */
   panel?: boolean;
-  /** HTML attributes for the form container element. */
-  containerProps?: React.HTMLAttributes<HTMLDivElement>;
-  /** HTML attributes for the form element. */
-  formProps?: React.HTMLAttributes<HTMLFormElement>;
   /** The content to be rendered within the form body. */
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  /** HTML attributes for the form container element. */
+  containerProps?: React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  >;
+  /** HTML attributes for the form element. */
+  formProps?: React.DetailedHTMLProps<
+    React.FormHTMLAttributes<HTMLFormElement>,
+    HTMLFormElement
+  >;
 }
 
 /**
