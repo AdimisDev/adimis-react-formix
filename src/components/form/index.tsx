@@ -29,6 +29,9 @@ import {
 import FormixProvider from "@/context/form.provider";
 import { useFormix } from "@/hooks";
 
+/**
+ * Provides a context for the form using the FormixProvider.
+ */
 const FormixFormProvider = FormixProvider;
 
 const PanelContext = React.createContext<boolean>(true);
@@ -41,6 +44,10 @@ const FieldItemContext = React.createContext<FieldItemContextValue>(
   {} as FieldItemContextValue
 );
 
+/**
+ * Hook for accessing the FormBodyContext.
+ * @throws {Error} If used outside of a FormBody component.
+ */
 const useFormBodyContext = () => {
   const context = React.useContext(FormBodyContext);
   if (!context) {
@@ -49,6 +56,10 @@ const useFormBodyContext = () => {
   return context;
 };
 
+/**
+ * Hook for accessing the FormHeaderContext.
+ * @throws {Error} If used outside of a FormHeader component.
+ */
 const useFormHeaderContext = () => {
   const context = React.useContext(FormHeaderContext);
   if (!context) {
@@ -59,6 +70,11 @@ const useFormHeaderContext = () => {
   return context;
 };
 
+/**
+ * Hook for accessing form field context and state.
+ * @returns {UseFormFieldReturn} The form field context and state.
+ * @throws {Error} If used outside of a FormField component.
+ */
 const useFormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
@@ -85,113 +101,162 @@ const useFormField = <
   };
 };
 
-const FormBody = ({
-  panel = true,
-  containerProps,
-  formProps,
-  children,
-}: FormBodyProps) => {
-  const { handleOnSubmit, handleOnInvalidSubmit, formMethods } = useFormix();
-  const Container = panel ? Card : "div";
+/**
+ * Component for the main body of the form.
+ * Expected Parent: None (It serves as the main wrapper for the form).
+ * @param {FormBodyProps} props - The properties for the form body.
+ * @returns {JSX.Element} The FormBody component.
+ */
+const FormBody = React.forwardRef<
+  HTMLFormElement | HTMLDivElement,
+  FormBodyProps
+>(
+  (
+    { panel = true, containerProps, formProps, children },
+    ref: React.LegacyRef<HTMLFormElement | HTMLDivElement>
+  ) => {
+    const { handleOnSubmit, handleOnInvalidSubmit, formMethods } = useFormix();
+    const Container = panel ? Card : "div";
 
-  return (
-    <FormBodyContext.Provider value={true}>
-      <PanelContext.Provider value={panel}>
-        <Container {...containerProps}>
-          <form
-            onSubmit={formMethods.handleSubmit(
-              handleOnSubmit,
-              handleOnInvalidSubmit
-            )}
-            {...formProps}
+    return (
+      <FormBodyContext.Provider value={true}>
+        <PanelContext.Provider value={panel}>
+          <Container
+            {...containerProps}
+            ref={ref as React.LegacyRef<HTMLDivElement>}
           >
-            {children}
-          </form>
-        </Container>
-      </PanelContext.Provider>
-    </FormBodyContext.Provider>
-  );
-};
+            <form
+              onSubmit={formMethods.handleSubmit(
+                handleOnSubmit,
+                handleOnInvalidSubmit
+              )}
+              {...formProps}
+            >
+              {children}
+            </form>
+          </Container>
+        </PanelContext.Provider>
+      </FormBodyContext.Provider>
+    );
+  }
+);
+FormBody.displayName = "FormBody";
 
-const FormHeader = ({
-  children,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => {
+/**
+ * Component for the header section of the form.
+ * Expected Parent: FormBody.
+ * @param {React.HTMLAttributes<HTMLDivElement>} props - The properties for the form header.
+ * @returns {JSX.Element} The FormHeader component.
+ */
+const FormHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ children, className, ...props }, ref) => {
   useFormBodyContext();
   const panel = React.useContext(PanelContext);
   const Header = panel ? CardHeader : "div";
   return (
     <FormHeaderContext.Provider value={true}>
-      <Header className={cn(className)} {...props}>
+      <Header ref={ref} className={cn(className)} {...props}>
         {children}
       </Header>
     </FormHeaderContext.Provider>
   );
-};
+});
+FormHeader.displayName = "FormHeader";
 
-const FormFooter = ({
-  children,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => {
+/**
+ * Component for the footer section of the form.
+ * Expected Parent: FormBody.
+ * @param {React.HTMLAttributes<HTMLDivElement>} props - The properties for the form footer.
+ * @returns {JSX.Element} The FormFooter component.
+ */
+const FormFooter = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ children, className, ...props }, ref) => {
   useFormBodyContext();
   const panel = React.useContext(PanelContext);
   const Footer = panel ? CardFooter : "div";
   return (
-    <Footer className={cn(className)} {...props}>
+    <Footer ref={ref} className={cn(className)} {...props}>
       {children}
     </Footer>
   );
-};
+});
+FormFooter.displayName = "FormFooter";
 
-const FormContent = ({
-  children,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => {
+/**
+ * Component for the content section of the form.
+ * Expected Parent: FormBody.
+ * @param {React.HTMLAttributes<HTMLDivElement>} props - The properties for the form content.
+ * @returns {JSX.Element} The FormContent component.
+ */
+const FormContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ children, className, ...props }, ref) => {
   useFormBodyContext();
   const panel = React.useContext(PanelContext);
   const Content = panel ? CardContent : "div";
   return (
-    <Content className={cn(className)} {...props}>
+    <Content ref={ref} className={cn(className)} {...props}>
       {children}
     </Content>
   );
-};
+});
+FormContent.displayName = "FormContent";
 
-const FormTitle = ({
-  children,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLHeadingElement>) => {
+/**
+ * Component for the title of the form.
+ * Expected Parent: FormHeader.
+ * @param {React.HTMLAttributes<HTMLHeadingElement>} props - The properties for the form title.
+ * @returns {JSX.Element} The FormTitle component.
+ */
+const FormTitle = React.forwardRef<
+  HTMLHeadingElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ children, className, ...props }, ref) => {
   useFormHeaderContext();
   const panel = React.useContext(PanelContext);
   const Title = panel ? CardTitle : "h2";
   const { formLabel } = useFormix();
   return (
-    <Title className={cn(className)} {...props}>
+    <Title ref={ref} className={cn(className)} {...props}>
       {children ? children : formLabel}
     </Title>
   );
-};
+});
+FormTitle.displayName = "FormTitle";
 
-const FormDescription = ({
-  children,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) => {
+/**
+ * Component for the description of the form.
+ * Expected Parent: FormHeader.
+ * @param {React.HTMLAttributes<HTMLParagraphElement>} props - The properties for the form description.
+ * @returns {JSX.Element} The FormDescription component.
+ */
+const FormDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ children, className, ...props }, ref) => {
   useFormHeaderContext();
   const panel = React.useContext(PanelContext);
   const { formDescription } = useFormix();
   const Description = panel ? CardDescription : "p";
   return (
-    <Description className={cn(className)} {...props}>
+    <Description ref={ref} className={cn(className)} {...props}>
       {children ? children : formDescription}
     </Description>
   );
-};
+});
+FormDescription.displayName = "FormDescription";
 
+/**
+ * Component for rendering flexible form fields in a grid layout.
+ * Expected Parent: FormBody or any context where FormixProvider is used (due to useFormix).
+ * @param {FormFlexFieldProps} props - The properties for the flexible form fields.
+ * @returns {JSX.Element} The FormFlexFields component.
+ */
 const FormFlexFields = <TFieldValues extends FieldValues = FieldValues>({
   fluid = false,
   style,
@@ -247,6 +312,14 @@ const FormFlexFields = <TFieldValues extends FieldValues = FieldValues>({
   );
 };
 
+/**
+ * Component for rendering a form field using react-hook-form's Controller.
+ * Expected Parent: FormFlexFields or directly within FormBody.
+ * @template TFieldValues - The type of field values.
+ * @template TName - The name of the field.
+ * @param {ControllerProps<TFieldValues, TName>} props - The properties for the Controller component.
+ * @returns {JSX.Element} The FormField component.
+ */
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
@@ -259,11 +332,18 @@ const FormField = <
     </FormFieldContext.Provider>
   );
 };
+FormField.displayName = "FormField";
 
-const FieldItem = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => {
+/**
+ * Component for wrapping individual form items with context.
+ * Expected Parent: FormField.
+ * @param {React.HTMLAttributes<HTMLDivElement>} props - The properties for the div element.
+ * @returns {JSX.Element} The FieldItem component.
+ */
+const FieldItem = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
   const id = React.useId();
   const fieldContext = React.useContext(FormFieldContext);
 
@@ -273,15 +353,22 @@ const FieldItem = ({
 
   return (
     <FieldItemContext.Provider value={{ id }}>
-      <div className={cn("space-y-2", className)} {...props} />
+      <div ref={ref} className={cn("space-y-2", className)} {...props} />
     </FieldItemContext.Provider>
   );
-};
+});
+FieldItem.displayName = "FieldItem";
 
-const FieldLabel = ({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>) => {
+/**
+ * Component for rendering a form field label.
+ * Expected Parent: FieldItem.
+ * @param {React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>} props - The properties for the LabelPrimitive.Root component.
+ * @returns {JSX.Element} The FieldLabel component.
+ */
+const FieldLabel = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, ...props }, ref) => {
   const { error, fieldItemId } = useFormField();
   const itemContext = React.useContext(FieldItemContext);
 
@@ -291,16 +378,25 @@ const FieldLabel = ({
 
   return (
     <Label
+      ref={ref}
       className={cn(error && "text-destructive", className)}
       htmlFor={fieldItemId}
       {...props}
     />
   );
-};
+});
+FieldLabel.displayName = "FieldLabel";
 
-const FieldControl = ({
-  ...props
-}: React.ComponentPropsWithoutRef<typeof Slot>) => {
+/**
+ * Component for rendering a form field control.
+ * Expected Parent: FieldItem.
+ * @param {React.ComponentPropsWithoutRef<typeof Slot>} props - The properties for the Slot component.
+ * @returns {JSX.Element} The FieldControl component.
+ */
+const FieldControl = React.forwardRef<
+  React.ElementRef<typeof Slot>,
+  React.ComponentPropsWithoutRef<typeof Slot>
+>(({ ...props }, ref) => {
   const { error, fieldItemId, fieldDescriptionId, fieldMessageId } =
     useFormField();
   const itemContext = React.useContext(FieldItemContext);
@@ -311,6 +407,7 @@ const FieldControl = ({
 
   return (
     <Slot
+      ref={ref}
       id={fieldItemId}
       aria-describedby={
         !error
@@ -321,12 +418,19 @@ const FieldControl = ({
       {...props}
     />
   );
-};
+});
+FieldControl.displayName = "FieldControl";
 
-const FieldDescription = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) => {
+/**
+ * Component for rendering a form field description.
+ * Expected Parent: FieldItem.
+ * @param {React.HTMLAttributes<HTMLParagraphElement>} props - The properties for the paragraph element.
+ * @returns {JSX.Element} The FieldDescription component.
+ */
+const FieldDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => {
   const { fieldDescriptionId } = useFormField();
   const itemContext = React.useContext(FieldItemContext);
 
@@ -336,18 +440,25 @@ const FieldDescription = ({
 
   return (
     <p
+      ref={ref}
       id={fieldDescriptionId}
       className={cn("text-sm text-muted-foreground", className)}
       {...props}
     />
   );
-};
+});
+FieldDescription.displayName = "FieldDescription";
 
-const FieldErrorMessage = ({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) => {
+/**
+ * Component for rendering a form field error message.
+ * Expected Parent: FieldItem.
+ * @param {React.HTMLAttributes<HTMLParagraphElement>} props - The properties for the paragraph element.
+ * @returns {JSX.Element | null} The FieldErrorMessage component, or null if there's no error message.
+ */
+const FieldErrorMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, children, ...props }, ref) => {
   const { error, fieldMessageId } = useFormField();
   const itemContext = React.useContext(FieldItemContext);
 
@@ -363,6 +474,7 @@ const FieldErrorMessage = ({
 
   return (
     <p
+      ref={ref}
       id={fieldMessageId}
       className={cn("text-sm font-medium text-destructive", className)}
       {...props}
@@ -370,7 +482,8 @@ const FieldErrorMessage = ({
       {body}
     </p>
   );
-};
+});
+FieldErrorMessage.displayName = "FieldErrorMessage";
 
 export {
   useFormField,
