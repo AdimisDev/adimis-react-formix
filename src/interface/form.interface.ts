@@ -39,9 +39,9 @@ export interface IFieldSchema<TFieldValues extends FieldValues> {
   /** Validation schema for the field using Zod. */
   validations?: z.ZodType<TFieldValues[Path<TFieldValues>], any>;
   /** CSS styles for the field. */
-  fieldStyle?: React.CSSProperties;
+  style?: React.CSSProperties;
   /** CSS class name for the field. */
-  fieldClassName?: string;
+  className?: string;
   /** The type of the field (e.g., text, select, radio group). */
   type?:
     | React.HTMLInputTypeAttribute

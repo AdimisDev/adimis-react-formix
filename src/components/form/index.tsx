@@ -199,7 +199,8 @@ const FormFlexFields = <TFieldValues extends FieldValues = FieldValues>({
   columns = 1,
   gap = "16px",
 }: FormFlexFieldProps) => {
-  const { formMethods, formFields } = useFormix<TFieldValues>();
+  const { formMethods, formFields, formDisabled, submitButtonLoading } =
+    useFormix<TFieldValues>();
   const { control } = formMethods;
 
   return (
@@ -219,13 +220,13 @@ const FormFlexFields = <TFieldValues extends FieldValues = FieldValues>({
         <div
           key={index}
           style={
-            !fluid || formField.fieldStyle
-              ? formField.fieldStyle
+            !fluid || formField.style
+              ? formField.style
               : {
                   maxWidth: "100%",
                 }
           }
-          className={formField.fieldClassName}
+          className={formField.className}
         >
           <FormField
             control={control}
@@ -234,7 +235,31 @@ const FormFlexFields = <TFieldValues extends FieldValues = FieldValues>({
               <FieldItem>
                 <FieldLabel />
                 <FieldControl>
-                  <Input placeholder={formField.placeholder} {...field} />
+                  {formField.render ? (
+                    formField.render({
+                      formDisabled: formDisabled,
+                      formErrors: formMethods.formState.errors,
+                      formItem: formField,
+                      formMethods: formMethods,
+                      submitButtonLoading: submitButtonLoading,
+                    })
+                  ) : (
+                    <Input
+                      ref={field.ref}
+                      key={formField.key}
+                      name={field.name}
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      disabled={formField.disabled}
+                      placeholder={formField.placeholder}
+                      defaultValue={formField.defaultValue}
+                      autoComplete={formField.autoComplete}
+                      className={formField.className}
+                      type={formField.type}
+                      style={formField.style}
+                    />
+                  )}
                 </FieldControl>
                 <FieldDescription>{formField.description}</FieldDescription>
                 <FieldErrorMessage />
