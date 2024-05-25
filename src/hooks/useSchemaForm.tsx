@@ -250,13 +250,13 @@ const useSchemaForm = <TFieldValues extends FieldValues>(
           <div
             key={field.key}
             style={
-              !fluid || field.fieldStyle
-                ? field.fieldStyle
+              !fluid || field.style
+                ? field.style
                 : {
                     maxWidth: "100%",
                   }
             }
-            className={field.fieldClassName}
+            className={field.className}
           >
             {field.render ? (
               field.render({

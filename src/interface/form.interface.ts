@@ -49,9 +49,12 @@ export interface IFieldSchema<TFieldValues extends FieldValues> {
     | "select"
     | "multi-select"
     | "radio group"
-    | "boolean";
+    | "boolean"
+    | string;
   /** Options for select, multi-select, or radio group fields. */
   options?: Array<{ label: string; value: string | number }>;
+  /** Table select field options*/
+  data?: Array<Record<string, any>>;
   /** Conditions for displaying the field based on other field values. */
   displayConditions?: DisplayCondition<TFieldValues>[];
   /** Conditions for removing validation from the field based on other field values. */
